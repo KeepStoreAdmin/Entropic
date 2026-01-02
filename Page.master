@@ -1,0 +1,1224 @@
+﻿<%@ Master Language="VB" CodeFile="Page.master.vb" Inherits="Page" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+
+<head runat="server">
+    <meta name="google-site-verification" content="rLGrbDrIpaDolPSpmkCOp4UnAwiaahKu4abLtCMAPBI" />
+    <title>Shop OnLine</title>
+    <meta name="robots" content="index,follow" />
+    <meta http-equiv="imagetoolbar" content="no" />
+    <meta http-equiv="Content-Language" content="it" />
+    <meta name="Distribution" content="Global" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE" />
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <meta name="revisit-after" content="1 days"/>   
+	<meta http-equiv="Cache-control" content="NO-CACHE">
+    <head><!-- TradeDoubler site verification 1649696 --></head>
+    <head><!-- TradeDoubler site verification 1653756 --></head>
+    <meta name="google-site-verification" content="RwItR5Wsg9UVw53U-z7MvuerwmnNkzqrFuPiv4xJS7U" />
+	
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+ 
+    <style type="text/css">
+    /* tooltip styling. by default the element to be styled is .tooltip  
+    .tooltip {
+	    display:none;
+	    background:transparent url(Public/ToolTip/tooltip.png) no-repeat;
+	    background-position: 0px 0px; 
+	    text-align:center;
+	    font-weight:bold;
+	    font-size:10px;
+	    height:109px;
+	    width:180px;
+	    padding-top:15px;
+	    padding-left:15px;
+	    padding-right:20px;
+	    color:#fff;
+    }*/
+	
+	.tooltip-inner {
+		max-width: 300px!important;
+		border-radius: unset!important;
+		background-color: #FFFFCC!important;
+		color: black!important;
+	}
+    #spinner-panel {
+     display:none;
+      position:fixed;
+     top:0px;
+     left:0px;
+     width:100%;
+     height:100%;
+     z-index:1001;
+    }
+    .btnSpinner{}
+    </style>
+    
+    
+	
+	<link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+	
+	<link href="public/style/style.css" rel="stylesheet" type="text/css" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet" type="text/css">
+	
+	
+</head>
+
+<% if social_buttons_rules("enabled")=True then %>
+<!-- GetButton.io widget -->
+<script type="text/javascript">
+    (function () {
+        var options = {
+			<% for each social_button As KeyValuePair(of String, String) in social_buttons %>
+			<%= social_button.key %>: "<%= social_button.value %>",
+            <% Next %>call_to_action: "<%= social_buttons_rules("callToAction") %>", // Call to action
+            button_color: "<%= social_buttons_rules("buttonColor") %>", // Color of button
+            position: "<%= social_buttons_rules("position") %>", // Position may be 'right' or 'left'
+            order: "<% Dim prefix As String %><% for each social_button As KeyValuePair(of String, String) in social_buttons %>
+				<%= prefix %><% prefix = "," %><%= social_button.key %><% Next %>",
+        };
+        var proto = document.location.protocol, host = "getbutton.io", url = proto + "//static." + host;
+        var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = url + '/widget-send-button/js/init.js';
+        s.onload = function () { WhWidgetSendButton.init(host, proto, options); };
+        var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x);
+    })();
+</script>
+<!-- /GetButton.io widget -->
+<% end if %>
+
+<body id="PageBody" runat="server" style="height: 100%; width: 100%; background-color: #f2f2f2; background-repeat: no-repeat; background-position: top center; overflow-x: hidden; z-index: 0;" class="m-0">
+    <script type="text/javascript">
+	
+        function mostraSpinner() {
+            $("#spinner-panel").fadeIn(300);
+        }
+		
+		//fn per ritardare l'esecuzione finchè non viene caricato jquery
+		function defer(method) {
+			if (window.jQuery) {
+				method();
+			} else {
+				setTimeout(function() { defer(method) }, 50);
+			}
+		}
+    </script>
+    <!--
+    <%  If (Me.Session.Item("AziendaID") = 1) Then%>
+	<script src="https://cdn.wibiya.com/Toolbars/dir_1152/Toolbar_1152045/Loader_1152045.js" type="text/javascript"></script><noscript><a href="http://www.wibiya.com/">Web Toolbar by Wibiya</a></noscript> 
+	<% Else%>
+	<script src="https://cdn.wibiya.com/Toolbars/dir_1152/Toolbar_1152154/Loader_1152154.js" type="text/javascript"></script><noscript><a href="http://www.wibiya.com/">Web Toolbar by Wibiya</a></noscript> 
+	<%End If%>
+    -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <%If Me.Session("Popup") = 1 Then%>
+        <script type="text/javascript">
+
+        $(document).ready(
+		
+		function(){		
+		let JQ = $;		
+		var popID = "popup"; //Get Popup Name
+		var popURL = "#?w=700"; //Get Popup href to define size
+				
+		//Pull Query & Variables from href URL
+		var query= popURL.split('?');
+		var dim= query[1].split('&');
+		var popWidth = dim[0].split('=')[1]; //Gets the first query string value
+
+		//Fade in the Popup and add close button
+		JQ('#' + popID).fadeIn().css({ 'width': Number( popWidth ) }).prepend('<a href="#" class="close"><img src="Public/Images/close_pop.png" style="width:50px; height:50px;" class="btn_close" title="Close Window" alt="Close" /></a>');
+		
+		//Define margin for center alignment (vertical + horizontal) - we add 80 to the height/width to accomodate for the padding + border width defined in the css
+		var popMargTop = (200 + 80) / 2;
+		var popMargLeft = (700 + 80) / 2;
+		
+		//Apply Margin to Popup
+		JQ('#' + popID).css({ 
+			'margin-top' : -popMargTop,
+			'margin-left' : -popMargLeft
+		});
+        
+		//Fade in Background
+		JQ('body').append('<div id="fade"></div>'); //Add the fade layer to bottom of the body tag.
+		JQ('#fade').css({'filter' : 'alpha(opacity=30)'}).fadeIn(); //Fade in the fade layer 
+		
+	    //Close Popups and Fade Layer
+	    JQ('#popup').on('click', 'a', function() { //When clicking on the close or fade layer...
+			JQ('#fade , .popup_block').fadeOut(function() {
+				JQ('#fade, a.close').remove();  
+			}); //fade them both out
+		    return false;
+	    });	
+	    
+	    JQ('#Chiudi').on('click', function() { //When clicking on the close or fade layer...
+			JQ('#fade , .popup_block').fadeOut(function() {
+				JQ('#fade, a.close').remove();  
+			}); //fade them both out
+		    return false;
+	    });	
+       });
+      </script>
+     <%End If%>
+     
+    <form id="form1" runat="server">
+    <asp:contentplaceholder id="Contentplaceholder1" runat="server">
+    </asp:contentplaceholder>
+    
+    <!-- Div MiPiace di Facebook -->
+    <table id="PopUpfacebook" runat="server" style="margin:auto; border:2px solid black; text-align:center; width:100%; height:100%; position:absolute; top:0px; left:0px; background-color:transparent; position:fixed; z-index:10000;">
+        <tr>
+            <td>
+                <div style="width:370px; height:200px; text-align:center; margin:auto; position:relative;">
+                    <asp:LinkButton ID="LB_CancelFacebook" runat="server"><img src="Images/cancel_icon.png" style="position:absolute; top:5px; right:5px;" alt="" /></asp:LinkButton>
+                    
+                    <table style="width:100%; height:100%; text-align:center; vertical-align:middle; padding:30px; background-color:white; box-shadow:10px 10px 30px 8px black;">
+                        <tr>
+                            <td>
+                                <!-- Img Jpg rappresentativa del MiPiace -->
+                                <img src="Images/facebookLike.png" alt="" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="position:relative;">
+                                <!-- iFrame relativo al MiPiace di Facebook -->
+                                <img src="Images/indicator.png" style="position:absolute; right:65px; top:0px; height:40px;" />
+                                <iframe id="facebookLike" src="//www.facebook.com/plugins/like.php?href=<%= Session("facebookLink") %>&amp;width&amp;layout=button_count&amp;action=like&amp;show_faces=false&amp;share=false&amp;height=21&amp;appId=1405753389699057" scrolling="no" frameborder="0" style="border:none; width:115px; height:20px; margin:auto; padding:20px;" allowTransparency="true"></iframe>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="background-color:#3d5a9e; color:White; font-weight:bold; padding:5px;">
+                                Clicca su Mi Piace
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <!----------------------------->
+            
+    <%If Me.Session("Popup") = 1 Then%>
+         <%Me.Session("Popup") = 0%>
+          <div id="popup" class="popup_block" style="display:none;">
+              <asp:SqlDataSource ID="SqlData_Popup" runat="server" ConnectionString="<%$ ConnectionStrings:EntropicConnectionString %>"
+                  ProviderName="<%$ ConnectionStrings:EntropicConnectionString.ProviderName %>"
+                  SelectCommand="SELECT Azienda, Data_Inizio, Data_Fine, Messaggio, Abilitato FROM popup">
+              </asp:SqlDataSource>
+              <asp:FormView ID="FormView1" runat="server" DataSourceID="SqlData_Popup" style="margin:auto;" Width="600px">
+                  <EditItemTemplate>
+                      Azienda:
+                      <asp:TextBox ID="AziendaTextBox" runat="server" Text='<%# Bind("Azienda") %>'>
+                      </asp:TextBox><br />
+                      Data_Inizio:
+                      <asp:TextBox ID="Data_InizioTextBox" runat="server" Text='<%# Bind("Data_Inizio") %>'>
+                      </asp:TextBox><br />
+                      Data_Fine:
+                      <asp:TextBox ID="Data_FineTextBox" runat="server" Text='<%# Bind("Data_Fine") %>'>
+                      </asp:TextBox><br />
+                      Messaggio:
+                      <asp:TextBox ID="MessaggioTextBox" runat="server" Text='<%# Bind("Messaggio") %>'>
+                      </asp:TextBox><br />
+                      Abilitato:
+                      <asp:TextBox ID="AbilitatoTextBox" runat="server" Text='<%# Bind("Abilitato") %>'>
+                      </asp:TextBox><br />
+                      <asp:LinkButton ID="UpdateButton" runat="server" CausesValidation="True" CommandName="Update"
+                          Text="Aggiorna">
+                      </asp:LinkButton>
+                      <asp:LinkButton ID="UpdateCancelButton" runat="server" CausesValidation="False" CommandName="Cancel"
+                          Text="Annulla">
+                      </asp:LinkButton>
+                  </EditItemTemplate>                  
+                  <ItemTemplate>
+                      <asp:Label ID="MessaggioLabel" runat="server" Text='<%# Bind("Messaggio") %>'></asp:Label>
+                  </ItemTemplate>
+              </asp:FormView>
+              <br /><br />
+	      <div id="Chiudi" href="#" style=" font-weight:bold; color:Red; cursor:pointer;">Chiudi POPUP</div>
+          </div>
+    <%End If%>
+    
+    <!-- Immagine a tutto schermo -->
+    <div id="spinner-panel" style="overflow:auto; background-color:#000; border:1px solid black; opacity:0.6;filter:alpha(opacity=60);">
+        <table style=" width:100%; height:100%;">
+            <tr>
+                <td style="text-align:center; vertical-align:middle;">
+                    <p align="center" style="color:White; font-size:35px; font-weight:bold;">
+                        <img width="35px" src="Public/Images/spinner.gif" alt="Searching..." style="border:none;" />
+                    </p>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <!---------------------------------------->
+        
+    <!-- UP -->
+    <a name="up"></a>
+    
+	
+	
+	
+	<!-- Header -->
+    <header>
+		<div class="container bg-header">
+			<div class="row m-0 align-items-center">
+				<div class="col p-0">
+					<!-- Logo -->
+					<asp:HyperLink ID="hlHome" runat="server" NavigateUrl="~/">
+						<asp:Image ID="imgLogoMobile" runat="server" class="d-md-none my-1" style="width: 200px;"/>
+						<!-- this one will be visible on everything else -->
+						<asp:Image ID="imgLogo" runat="server" ImageAlign="left" Height="120px" class="img-fluid d-none d-md-block mb-1" style="min-width: 300px; max-width: 100%;"/>
+                    </asp:HyperLink>
+					
+					<!-- menu datasource-->			
+					<asp:SqlDataSource ID="sdsMenu" runat="server" ConnectionString="<%$ ConnectionStrings:EntropicConnectionString %>"   ProviderName="<%$ ConnectionStrings:EntropicConnectionString.ProviderName %>"
+						SelectCommand="SELECT Nome, id FROM pagine WHERE (Abilitato = ?Abilitato) AND (AziendeId = ?AziendeId) AND ((Tipo=1) OR (Tipo=2) OR (Tipo=5) OR (Tipo=6)) ORDER BY Ordinamento ASC, Nome ASC" EnableViewState="False">
+						<SelectParameters>
+							<asp:Parameter DefaultValue="1" Name="Abilitato" Type="Int32" />
+							<asp:SessionParameter Name="AziendeId" SessionField="AziendaID" Type="Int32" />
+						</SelectParameters>
+					</asp:SqlDataSource>
+					
+					
+				</div>
+				<div class="col p-0">
+					<div class="d-flex justify-content-end">
+					
+						
+							
+							<%  If lblUtente.Text <> "" Then%>
+						<div class="dropdown custom-dropdown-hover">
+								<div class="list-inline-item dropdown mr-1 dropup d-none d-md-inline-block">
+									<div class="text-center font-weight-bold" style="font-size: 0.8rem;">							
+										<div>Benvenuto</div>
+										<div id="userPlaceholder"></div>
+									</div>
+								</div>
+								<div class="list-inline-item dropdown mr-0 dropup">
+								<a class="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+									<i id="user-icon" class="fa fa-user-circle fa-3x"></i>
+								</a>
+							</div>
+							<%Else%>
+						<div>
+								<div class="list-inline-item dropdown mr-1 dropup d-none d-md-inline-block" style="vertical-align: super;">
+									<div class="text-center font-weight-bold" style="font-size: 0.8rem;">							
+										<div><a href="login.aspx" style="color:white;text-decoration:none">Accedi o iscriviti</a></div>
+									</div>
+								</div>
+								<div class="list-inline-item dropdown mr-0 dropup">
+								<a href="login.aspx" role="button" aria-haspopup="true" aria-expanded="false">
+									<i id="user-icon" class="fa fa-user-circle fa-3x"></i>
+								</a>
+							</div>
+							<%End If%>
+							
+							
+							
+							<div class="dropdown-menu" style="width:12rem;">
+								<!-- loginbox -->
+								<div class="p-3">
+									
+									<asp:MultiView ID="mvLogin" runat="server" ActiveViewIndex="0">
+										<asp:View ID="vAccesso" runat="server">
+											<h5>Accedi</h5>
+											<div class="form-group">
+												<asp:Label id="lblUsername" runat ="server" Text ="Username"></asp:Label>
+												<asp:TextBox ID="tbUsername" CssClass="form-control" runat="server" EnableViewState="false" onfocus="if(this.value=='Username')this.value=''; return false;" MaxLength="40" ValidationGroup="login"></asp:TextBox><br />
+											</div>
+											<div class="form-group">
+												<asp:Label id="lblPwd" runat="server" Text="Password"></asp:Label>
+												<asp:TextBox ID="tbPassword" runat="server" CssClass="form-control" EnableViewState="false" TextMode="Password" onfocus="this.removeAttribute('readonly'); if(this.value=='Password')this.value=''; return false;" MaxLength="20" ValidationGroup="login"></asp:TextBox>
+											</div>
+											<asp:Button ID="btEntra" runat="server" Text="Login" CssClass="btnStandardColor btn" EnableViewState="False" ValidationGroup="login" />
+											<br />
+
+											<asp:Label ID="lblLogin" runat="server" Font-Size="8pt" ForeColor="Red" Font-Bold="True" EnableViewState="False"></asp:Label><br />
+											<asp:HyperLink ID="hlRegistrati" EnableViewState="false" runat="server" NavigateUrl="~/registrazione.aspx" Font-Bold="true">Registrati!</asp:HyperLink>
+											<br />
+											<asp:HyperLink ID="hlRemind" EnableViewState="false" runat="server" NavigateUrl="~/remind.aspx" >Password persa?</asp:HyperLink>
+										
+										</asp:View>
+										<asp:View ID="vAccount" runat="server">
+											<h5>Benvenuto</h5>
+											<asp:Label ID="lblUtente" runat="server"  Font-Bold="true"></asp:Label><br />
+											Ultima visita del: <br /><asp:Label ID="lblAccesso" runat="server" Font-Size="8pt"></asp:Label><br /><br />
+
+											<asp:Label ID="Label2" runat="server" Text="»" Font-Bold="true" ForeColor="#E12825"></asp:Label> <asp:HyperLink ID="HyperLink5" runat="server" Font-Bold="true" NavigateUrl="registrazione.aspx" Font-Size="9pt">I tuoi Dati</asp:HyperLink><br />
+											<asp:Label ID="Label3" runat="server" Text="»" Font-Bold="true" ForeColor="#E12825"></asp:Label> <asp:HyperLink ID="HyperLink3" runat="server" Font-Bold="true" NavigateUrl="cambiapassword.aspx" Font-Size="9pt">La tua Password</asp:HyperLink><br />
+											<asp:Label ID="Label1" runat="server" Text="»" Font-Bold="true" ForeColor="#E12825"></asp:Label> <asp:HyperLink ID="HyperLink2" runat="server" Font-Bold="true" NavigateUrl="documenti.aspx?t=4" Font-Size="9pt">Documenti</asp:HyperLink><br />
+											<asp:Label ID="Label4" runat="server" Font-Bold="true" ForeColor="#E12825" Text="»"></asp:Label> <asp:HyperLink ID="HyperLink14" runat="server" Font-Bold="True" NavigateUrl="listini.aspx" Font-Size="9pt">Gestione Listini</asp:HyperLink><br />
+											<asp:Label ID="Label5" runat="server" Text="»" Font-Bold="true" ForeColor="#E12825"></asp:Label> <asp:HyperLink ID="HyperLink4" runat="server" Font-Bold="true" NavigateUrl="wishlist.aspx" Font-Size="9pt">Wishlist</asp:HyperLink><br />
+											<br />
+											<asp:Label ID="Label6" runat="server" Text="»" Font-Bold="true" ForeColor="#E12825"></asp:Label> <asp:HyperLink ID="HyperLink1" runat="server" Font-Bold="true" NavigateUrl="logout.aspx" Font-Size="9pt">Logout</asp:HyperLink>
+											<!--<br />-->
+											<!--<br />-->
+											<asp:HyperLink ID="HyperLink_PagaOrdini" runat="server" NavigateUrl="documenti.aspx?t=4">
+											<div id="pay_your_orders" runat="server" visible="false" style="text-align:center;">
+												<div>
+													<div style="width:33%;float:left">&nbsp;</div>
+													<div style="width:34%;float:left">
+														<img src="/Public/images/credito.png" alt="Paga i tuoi ordini" width="40px">
+													</div>
+													<div style="width:33%;float:left">
+														<div ID="to_pay" runat="server" style="float:right;border-radius: 50%;behavior: url(PIE.htc);width: 30px;height: 30px;background: #ff3c3c;font-weight: bold;line-height:28px;color:white"/>		
+													</div>
+												</div>
+												
+												<div style="clear:both">
+													<b>Paga i tuoi ordini</b>
+												</div>
+											</div>
+											</asp:HyperLink>
+										
+										</asp:View>
+									</asp:MultiView>  
+								</div>
+							
+							</div>
+						</div>
+						
+						<div class="dropdown custom-dropdown-hover nav-style">
+							<a class="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" style="font-size:13px; padding-right:0px">
+								<i class="fa fa-ellipsis-v fa-3x text-white"></i>
+							</a>
+							<div class="dropdown-menu">
+								<asp:Repeater ID="rMenu" runat="server" DataSourceID="sdsMenu" EnableViewState="False" >
+									<ItemTemplate>
+										<li class="nav-item">
+											<asp:HyperLink ID="hlMenu" CssClass="nav-link" runat="server" NavigateUrl='<%# "~/main.aspx?id="& eval("id") %>' EnableViewState="false" Text='<%# Eval("nome") %>'></asp:HyperLink>
+										</li>
+									</ItemTemplate>
+									<FooterTemplate></ul></FooterTemplate>
+									<HeaderTemplate>
+										<ul class="navbar-nav mr-auto">
+										<li class="nav-item">
+											<asp:HyperLink ID="hlHome" CssClass="nav-link" runat="server" Text="Home" EnableViewState="false" NavigateUrl="~/"></asp:HyperLink>
+										</li>                
+									</HeaderTemplate>
+								</asp:Repeater> 
+							</div>
+						</div>
+						
+					</div>
+				</div>
+				
+			</div>
+			
+			<div class="row header-bar">			
+				
+				
+				<div class="col my-3 m-md-0">
+					<div class="d-flex justify-content-between">
+						
+						<div>
+							
+						<!--Categorie nav-->
+						<div class="navbar-hover nav-style">
+							<div class="navbar-hover-wrapper">
+								<ul class="navbar-nav">
+									<li class="nav-item dropdown">
+										<a class="nav-link text-white p-0" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+											<div class="d-flex">
+												<i class="fa fa-bars header-fa"></i> 
+												<div class="ml-2 align-self-center" style="font-size: 0.8rem;">Categorie</div>
+											</div>
+										</a>
+										<ul class="dropdown-menu" style="margin-top: -1px;min-width: 20rem;">
+											<%
+												Dim settori As System.Collections.Generic.List(Of Settore)
+												settori = CType(Me.Session.Item("ListaSettori"), System.Collections.Generic.List(Of Settore))
+																
+												For Each tmpSettore As Settore In settori
+													
+													If tmpSettore.categorie.Count > 0 Then%>
+														<li>
+															<a class="dropdown-item dropdown-toggle" href="#"><%= tmpSettore.nome %></a>
+															<ul class="dropdown-menu bg-light-dark-1">
+																
+																<% For Each tmpCategoria As Categoria In tmpSettore.categorie
+																				If tmpCategoria.sottoLivelli.Count > 0 Then%>
+																					<li>
+																						<a class="dropdown-item dropdown-toggle" href="#"><%= tmpCategoria.nome %></a>
+																						<ul class="dropdown-menu bg-light-dark-2">
+																							
+																							<% For Each tmpTipologia As SottoLivello In tmpCategoria.sottoLivelli %>
+																											<li>
+																											<a class="dropdown-item" href="articoli.aspx?st=<%=tmpSettore.id %>&ct=<%=tmpCategoria.id %>&tp=<%=tmpTipologia.id %>"><%= tmpTipologia.nome %></a>
+																											</li>
+																											
+																							<% Next %>
+																						</ul>
+																					</li>
+																				
+																				<% Else%>
+																					<li>
+																					<a class="dropdown-item" href="articoli.aspx?st=<%=tmpSettore.id %>&ct=<%=tmpCategoria.id %>"><%= tmpCategoria.nome %></a>
+																					</li>
+																				<% End If
+																 Next %>
+															</ul>
+														</li>
+													
+													<% Else%>
+														<li>
+															<a class="nav-link" href='default.aspx?st=<%= tmpSettore.id %>'> <%= tmpSettore.nome %> </a>
+														</li>
+													<% End If
+														
+												Next
+											%>
+
+										</ul>
+									</li>
+								</ul>
+							</div>
+						</div>
+						
+						<!--Fine categorie nav-->
+						</div>
+						
+						<div class="d-none d-md-block">
+							<div class="form-inline my-2 my-lg-0">
+								<div class="input-group" style="width:490px">
+									<asp:TextBox ID="tbCerca" CssClass="form-control" runat="server" ValidationGroup="ricerca" AutoPostBack="False" Style="height: 34px;" onfocus="cancella_testo()" >Che prodotto cerchi?</asp:TextBox>
+									<div class="input-group-append">
+										<button id="CercaBtn" class="btn btn-secondary" type="submit" style="height: 34px;" onclick="mostraSpinner()">
+											<i class="fa fa-search"></i>
+										</button>
+									</div>
+									<div>
+										<a href="search_complete.aspx">
+											<!--<img src="Images/search_advance.png" alt="Ricerca avanzata" />-->
+											<i class="fa fa-search-plus header-fa ml-3 text-light" style="font-size: 1.5rem; margin-top: 5px;" alt="Ricerca avanzata"></i>
+										</a>
+									</div>
+								</div>
+												
+								<script language="javascript" type="text/javascript">
+									function cancella_testo()
+									{
+										document.getElementById("tbCerca").value = "";
+									}
+								</script>
+							  
+							</div>
+						</div>
+						
+						
+						<div class="dropdown custom-dropdown-hover">
+							<a class="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+								<i class="fa fa-shopping-cart header-fa ml-3 text-white"></i>
+								<%  If lblCarrelloCount.Text > 0 Then%>
+									<span class="ml-1" style="vertical-align: top;font-size: 0.75rem;background: #f1e300;padding: 0.1rem 0.4rem;border-radius: 50%;font-weight: 600;">
+										<%= lblCarrelloCount.Text %>
+									</span>
+								<%End If%>
+								
+							</a>
+							<div class="dropdown-menu" style="left: -75px;">
+								<!-- box carrello -->
+								<div class="p-3">
+									<h5>Carrello</h5>
+									<a href='carrello.aspx' title="Visualizza Carrello">
+										<b><asp:Label ID="lblCarrelloCount" Name="lblCarrelloCount" runat="server" Text="0" EnableViewState="false"></asp:Label></b>) € <b><asp:Label ID="lblCarrelloTotale" runat="server" Text="0,00" EnableViewState="false"></asp:Label></b>
+										<!--<img src="images/cart.gif" width="18" height="15" border="0" />-->
+									</a>
+								</div>		
+								<!-- fine box carrello -->
+							</div>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+			
+			
+			
+			<!--
+            <div id="menu">
+
+				<div id="bar" style="position:relative; height:83px; padding-top:0px; margin-top:5px; background-color:rgb(122, 122, 122); background-image:none;">
+					<table id="infobar" style="width:100%; height:100%; vertical-align:middle; text-align:left; background-position:left 40px;">
+						<tr>
+							<td>
+								<table style=" margin:auto 0px auto auto; height:102%;">
+									<tr>
+										<td style="width:150px;">
+											<asp:FormView ID="FormView_TotOrdini" runat="server" DataSourceID="SqlData_TotOrdini" Height="100%" Visible="false">
+												<ItemTemplate>
+													<table style=" width:150px; height:100%; text-align:center; border-left-color:White; border-left-style:double; border-left-width:2px;">
+														<tr>
+															<td>
+																Ordini <%= calcola_anno()%>
+															</td>
+														</tr>
+														<tr>
+															<script runat="server">
+																Function AssegnainSessione_TotOrdini(ByVal temp As Integer) As Integer
+																	Session("TotOrdini") = temp
+																	Return temp
+																End Function
+																
+																Function calcola_anno() As String
+																	Dim temp As String
+																	temp = Date.Now.Year
+																	Return temp
+																End Function
+															</script>
+															<td style=" font-size:13pt; font-weight:bold; font-family: 'Aldrich', sans-serif;">
+																<%  If Session("TotOrdini") = 0 Then%>
+																	<%#AssegnainSessione_TotOrdini(Eval("Conteggio"))%>
+																<%Else%>
+																	<%=Session("TotOrdini")%>
+																<%End If%>
+															</td>
+														</tr>
+													</table>
+												</ItemTemplate>
+											</asp:FormView>
+											<asp:SqlDataSource ID="SqlData_TotOrdini" runat="server" 
+												ConnectionString="<%$ ConnectionStrings:EntropicConnectionString %>" 
+												ProviderName="<%$ ConnectionStrings:EntropicConnectionString.ProviderName %>" 
+												SelectCommand="SELECT COUNT(*) AS Conteggio FROM documenti WHERE (TipoDocumentiId = 4) AND (DataDocumento <= { d '2012-12-31' }) AND (DataDocumento >= { d '2012-01-01' })">
+											</asp:SqlDataSource>
+										</td>
+										<td style="width:150px;">
+											<asp:FormView ID="FormView_TotClienti" runat="server" 
+												DataSourceID="SqlData_TotClienti" Height="100%" Width="100%" visible="false">
+												<ItemTemplate>
+													<table style=" width:150px; height:100%;text-align:center; border-left-color:White; border-left-style:double; border-left-width:2px; border-right-color:White; border-right-style:double; border-right-width:2px;">
+														<tr>
+															<td>
+																Utenti Registrati
+															</td>
+														</tr>
+														<tr>
+															<script runat="server">
+																Function AssegnainSessione_TotClienti(ByVal temp As Integer) As Integer
+																	Session("TotClienti") = temp
+																	Return temp
+																End Function
+															</script>
+															<td style=" font-size:13pt; font-weight:bold; font-family: 'Aldrich', sans-serif;">
+																<%  If Session("TotClienti") = 0 Then%>
+																	<%#AssegnainSessione_TotClienti(Eval("Conteggio"))%>
+																<%Else%>
+																	<%=Session("TotClienti")%>
+																<%End If%>
+															</td>
+														</tr>
+													</table>
+												</ItemTemplate>
+											</asp:FormView>
+											
+											<asp:SqlDataSource ID="SqlData_TotClienti" runat="server" 
+												ConnectionString="<%$ ConnectionStrings:EntropicConnectionString %>" 
+												ProviderName="<%$ ConnectionStrings:EntropicConnectionString.ProviderName %>" 
+												SelectCommand="SELECT COUNT(*) AS Conteggio FROM utenti WHERE (UtentiTipoId=1) OR (UtentiTipoId=2) OR (UtentiTipoId=7) ">
+											</asp:SqlDataSource>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</div> 
+
+				 <asp:SqlDataSource ID="sdsSettori" runat="server" ConnectionString="<%$ ConnectionStrings:EntropicConnectionString %>" ProviderName="<%$ ConnectionStrings:EntropicConnectionString.ProviderName %>"
+					SelectCommand="SELECT id, Codice, Descrizione, img FROM settori WHERE (Abilitato = ?Abilitato) ORDER BY Ordinamento, Descrizione" EnableViewState="false">
+					<SelectParameters>
+						<asp:Parameter DefaultValue="1" Name="Abilitato" Type="Int32" />
+					</SelectParameters>
+				</asp:SqlDataSource> 
+            </div>-->
+		    <!-- fine menu -->
+			
+		</div>
+		
+		
+		
+
+	</header>
+	
+	<!--search mobile-->
+	<div class="container bg-white d-block d-md-none">
+		<div class="row ">
+			<div class="form-inline mt-3" style="width:94%;margin: 0 auto;">
+				<div class="input-group" style="width: 100%;">
+					<input type="search" placeholder="Che prodotto cerchi?" id="tbCercaMobile" class="form-control" style="height: 34px;box-shadow:none">
+					<div class="input-group-append">
+						<button class="btn btn-secondary" id="tbCercaMobileBtn" style="height: 34px;">
+							<i class="fa fa-search"></i>
+						</button>
+					</div>					
+					<a href="search_complete.aspx">
+						<i class="fa fa-search-plus header-fa ml-3 text-light" style="font-size: 1.5rem; margin-top: 5px; color: #6c757d!important;" alt="Ricerca avanzata"></i>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>								
+									
+									
+					
+					
+	
+	
+    <!--<div id="header" style="background-color:Transparent; width:1045px; overflow:hidden; margin:auto; padding:0px; height:120px;">
+        <table style="width:100%; height:100%; border-style:none; border-width:0px;">
+            <tr>
+                <td style="width:50%; text-align:left;">
+                    <asp:HyperLink ID="hlHome_old" runat="server" NavigateUrl="~/">
+                    <asp:Image ID="imgLogo_old" runat="server" ImageAlign="left" Height="120px" style="max-width:520px;"/>
+                    </asp:HyperLink>
+                </td>
+                <td style="width:50%; text-align:right;">
+                    -- Pubblicità Posizione TOP --
+                    <asp:SqlDataSource ID="SqlDataSource_Pubblicita_Top" runat="server" ConnectionString="<%$ ConnectionStrings:EntropicConnectionString %>"
+                        ProviderName="<%$ ConnectionStrings:EntropicConnectionString.ProviderName %>"
+                        SelectCommand="SELECT id, id_Azienda, data_inizio_pubblicazione, data_fine_pubblicazione, limite_click, limite_impressioni, id_posizione_banner, numero_click_attuale, numero_impressioni_attuale, link, img_path, titolo, descrizione, abilitato From pubblicitaV2"
+                        UpdateCommand="UPDATE pubblicitaV2 SET numero_impressioni = numero_impressioni + 1 WHERE (id = 1)">
+                    </asp:SqlDataSource>
+                    <asp:Repeater ID="Repeater2" runat="server" DataSourceID="SqlDataSource_Pubblicita_Top" EnableViewState="False" >
+                    <ItemTemplate>
+                       <div style="width:520px; height:120px; text-align:right; overflow:hidden; margin-left: 5px;">
+                            <asp:HyperLink ID="hlBanner" runat="server" NavigateUrl='<%# "click.aspx?id=" & Eval("id") & "&link=" & Server.UrlEncode(Eval("link")) %>' EnableViewState="false" tooltip='<%# Eval("Descrizione") %>' ImageUrl='<%# "Public/Banner/" & Eval("img_path") %>' Target='_self'></asp:HyperLink>
+                        </div>
+                    </ItemTemplate>
+                    </asp:Repeater>    
+                </td>
+            </tr>
+        </table>
+        
+        <table>
+            <tr>
+                <td>
+                    <span>Offerta del giorno</span>
+                    <b> Scopri le notre offerte del giorno per la tua regione</b>
+                </td>
+            </tr>
+        </table>
+    </div>-->
+   
+    <!-- Wrap -->
+	<div class="container pt-3" style="background-color: white;padding-left: 0px;padding-right: 0px;">
+
+		<div class="row m-0 p-0">
+			<!-- banner left
+			<div class="col-6 col-md-2 col-lg-2 order-2 order-md-1 sidebar p-0">
+				
+				
+				
+			  
+			<div class"text-center mx-1">
+					
+				<script runat="server">
+					Function chkBanner(ByVal temp As String) As String
+						If temp <> "" Then
+							Return "true"
+						Else
+							Return "false"
+						End If
+					End Function
+				</script>
+					
+				<asp:SqlDataSource ID="sdsSettore" runat="server" ConnectionString="<%$ ConnectionStrings:EntropicConnectionString %>"  ProviderName="<%$ ConnectionStrings:EntropicConnectionString.ProviderName %>" SelectCommand="SELECT id, Codice, Descrizione FROM Settori WHERE ID=?ID" EnableViewState="False">
+				<SelectParameters>
+					<asp:SessionParameter Name="ID" SessionField="st" Type="Int32" />
+				</SelectParameters>
+				</asp:SqlDataSource>
+				
+				
+				<asp:SqlDataSource ID="SqlDataSource_Pubblicita_Sinistra_1" runat="server" ConnectionString="<%$ ConnectionStrings:EntropicConnectionString %>"
+					ProviderName="<%$ ConnectionStrings:EntropicConnectionString.ProviderName %>"
+					SelectCommand="SELECT id, id_Azienda, data_inizio_pubblicazione, data_fine_pubblicazione, limite_click, limite_impressioni, id_posizione_banner, numero_click_attuale, numero_impressioni_attuale, link, img_path, titolo, descrizione, abilitato From pubblicitaV2"
+					UpdateCommand="UPDATE pubblicitaV2 SET numero_impressioni = numero_impressioni + 1 WHERE (id = 1)">
+				</asp:SqlDataSource>
+				<asp:Repeater ID="Repeater3" runat="server" DataSourceID="SqlDataSource_Pubblicita_Sinistra_1" EnableViewState="False" >
+				<ItemTemplate>
+					<div>
+						<asp:HyperLink ID="hlBanner" runat="server" NavigateUrl='<%# "click.aspx?id=" & Eval("id") & "&link=" & Server.UrlEncode(Eval("link")) %>' EnableViewState="false" tooltip='<%# Eval("Descrizione") %>' ImageUrl='<%# "Public/Banner/" & Eval("img_path") %>' Target='_self'></asp:HyperLink>
+					</div>
+				</ItemTemplate>
+				</asp:Repeater> 
+			   
+				
+				<%If Request.Url.AbsoluteUri.Contains("entropic") Then%>
+				<div id="box" style=" width:96%;">
+					<h1>Magazzino Esterno</h1>
+					<p style="border-bottom: 2px solid #E12825;">
+					<a title="Cerca un prodotto nel nostro magazzino esterno" href="http://eweb.entropic.it" style="display: block; margin-left: auto; margin-right: auto; border-style:none; border-width:0px; text-align:center;">
+						<img src="Public/Images/e-web.gif" alt="" style="border-style:none; border-width:0px;"/>
+						<br />
+						<br />
+						<span style=" font-size:8pt; color:Gray;">Non trovi un prodotto sul sito?</span>
+						<br />
+						<span style=" font-size:8pt; color:Gray;">cercalo nel Magazzino Esterno</span>
+					</a>
+					</p>
+				</div>   
+				<%End If%>
+						
+				
+				
+				<asp:SqlDataSource ID="SqlDataSource_Pubblicita_Sinistra_2" runat="server" ConnectionString="<%$ ConnectionStrings:EntropicConnectionString %>"
+					ProviderName="<%$ ConnectionStrings:EntropicConnectionString.ProviderName %>"
+					SelectCommand="SELECT id, id_Azienda, data_inizio_pubblicazione, data_fine_pubblicazione, limite_click, limite_impressioni, id_posizione_banner, numero_click_attuale, numero_impressioni_attuale, link, img_path, titolo, descrizione, abilitato From pubblicitaV2"
+					UpdateCommand="UPDATE pubblicitaV2 SET numero_impressioni = numero_impressioni + 1 WHERE (id = 1)">
+				</asp:SqlDataSource>
+				<asp:Repeater ID="Repeater4" runat="server" DataSourceID="SqlDataSource_Pubblicita_Sinistra_2" EnableViewState="False" >
+				<ItemTemplate>
+					<div>
+						<asp:HyperLink ID="hlBanner" runat="server" NavigateUrl='<%# "click.aspx?id=" & Eval("id") & "&link=" & Server.UrlEncode(Eval("link")) %>' EnableViewState="false" tooltip='<%# Eval("Descrizione") %>' ImageUrl='<%# "Public/Banner/" & Eval("img_path") %>' Target='_self'></asp:HyperLink>
+					</div>
+				</ItemTemplate>
+				</asp:Repeater> 
+				
+				
+				<asp:SqlDataSource ID="SqlDataSource_Pubblicita_Sinistra_3" runat="server" ConnectionString="<%$ ConnectionStrings:EntropicConnectionString %>"
+					ProviderName="<%$ ConnectionStrings:EntropicConnectionString.ProviderName %>"
+					SelectCommand="SELECT id, id_Azienda, data_inizio_pubblicazione, data_fine_pubblicazione, limite_click, limite_impressioni, id_posizione_banner, numero_click_attuale, numero_impressioni_attuale, link, img_path, titolo, descrizione, abilitato From pubblicitaV2"
+					UpdateCommand="UPDATE pubblicitaV2 SET numero_impressioni = numero_impressioni + 1 WHERE (id = 1)">
+				</asp:SqlDataSource>
+				<asp:Repeater ID="Repeater5" runat="server" DataSourceID="SqlDataSource_Pubblicita_Sinistra_3" EnableViewState="False" >
+				<ItemTemplate>
+					<div>
+						<asp:HyperLink ID="hlBanner" runat="server" NavigateUrl='<%# "click.aspx?id=" & Eval("id") & "&link=" & Server.UrlEncode(Eval("link")) %>' EnableViewState="false" tooltip='<%# Eval("Descrizione") %>' ImageUrl='<%# "Public/Banner/" & Eval("img_path") %>' Target='_self'></asp:HyperLink>
+					</div>
+				</ItemTemplate>
+				</asp:Repeater> 
+				
+				
+				<asp:SqlDataSource ID="sdsBanner_sinistra" runat="server" ConnectionString="<%$ ConnectionStrings:EntropicConnectionString %>"   ProviderName="<%$ ConnectionStrings:EntropicConnectionString.ProviderName %>"
+					SelectCommand="SELECT * From bannerV2 WHERE (Posizione=2) and (AziendeId = ?AziendeId) and (Coupon=0) ORDER BY Ordinamento, Descrizione" EnableViewState="False">
+					<SelectParameters>
+						<asp:SessionParameter Name="AziendeId" SessionField="AziendaID" Type="Int32" />
+					</SelectParameters>
+				</asp:SqlDataSource>
+
+				<asp:Repeater ID="Repeater9" runat="server" DataSourceID="sdsBanner_sinistra" EnableViewState="False" >
+				<ItemTemplate>
+				<div>
+					<asp:HyperLink ID="hlBanner" runat="server" NavigateUrl='<%# Eval("Link") %>' EnableViewState="false" tooltip='<%# Eval("Descrizione") %>' ImageUrl='<%# "public/banner/" & Eval("Immagine") %>' Target='<%# Eval("target") %>'  Visible='<%# chkBanner(Eval("Immagine"))%>'></asp:HyperLink><br /><br />
+					<asp:Label ID="htmlLabel" runat="server" Text='<%# Bind("html") %>' Font-Size="5pt"></asp:Label>
+				</div>
+				</ItemTemplate>
+				</asp:Repeater>
+				
+				<%If (Session("facebookLink") <> "") AndAlso (Session("facebookLink").ToString.Contains("facebook")) Then%>
+					<iframe src="//www.facebook.com/plugins/likebox.php?href=<%= Session("facebookLink") %>&amp;width=200&amp;height=500&amp;colorscheme=light&amp;show_faces=true&amp;header=true&amp;stream=false&amp;show_border=false&amp;appId=1405753389699057" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:200px; height:500px; margin-left:1px;" allowTransparency="true"></iframe>
+				<%End If%>
+
+				 <br />
+				<br />
+				<asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:EntropicConnectionString %>"
+					ProviderName="<%$ ConnectionStrings:EntropicConnectionString.ProviderName %>"
+					SelectCommand="SELECT id, id_Azienda, data_inizio_pubblicazione, data_fine_pubblicazione, limite_click, limite_impressioni, id_posizione_banner, numero_click_attuale, numero_impressioni_attuale, link, img_path, titolo, descrizione, abilitato From pubblicitaV2"
+					UpdateCommand="UPDATE pubblicitaV2 SET numero_impressioni = numero_impressioni + 1 WHERE (id = 1)">
+				</asp:SqlDataSource>
+				<br />
+				<asp:SqlDataSource ID="SqlDataSource_Pubblicita" runat="server" ConnectionString="<%$ ConnectionStrings:EntropicConnectionString %>"
+					ProviderName="<%$ ConnectionStrings:EntropicConnectionString.ProviderName %>"
+					SelectCommand="SELECT id, id_Azienda, data_inizio_pubblicazione, data_fine_pubblicazione, limite_click, limite_impressioni, id_posizione_banner, numero_click_attuale, numero_impressioni_attuale, link, img_path, titolo, descrizione, abilitato From pubblicitaV2"
+					UpdateCommand="UPDATE pubblicitaV2 SET numero_impressioni = numero_impressioni + 1 WHERE (id = 1)">
+				</asp:SqlDataSource>
+			   
+				</div>
+		
+				
+			</div>-->
+		
+			<div class="col-12 col-md-8 col-lg-8 order-1 order-md-2 p-0">
+				<div class="p-1"> 
+					<asp:contentplaceholder id="cph" runat="server">
+					</asp:contentplaceholder>
+				</div>
+			</div>
+			
+			<div class="col-12 col-md-4 order-2 sidebar p-1">
+			
+					<div style="height: 339px" class="d-none d-md-block">
+					</div>   
+			
+				<div class="text-center my-3"> <!-- id="sidebarRight" -->
+					
+					<!-- Abilitazione Groupon, quando si deve verificare il codice del Groupon -->
+					<% If Session("Abilita_Groupon") = 1 Then%>
+					   <div>
+							<a href="carrello_groupon.aspx"><img src="Images/groupon/bannerGroupon.png" alt="" /></a>
+					   </div>             
+					<%End If%>
+					<!-- --------------- -->
+					
+					<!-- Abilitazione visualizzazione pubblicità relativa ai Coupon -->
+					<% If Session("Abilita_Coupon") = 1 Then%>
+					   <div>
+							<a href="lista_coupon.aspx"><img src="Images/coupon.gif" style="width: 100%;" alt="" /></a>
+					   </div>             
+					<%End If%>
+					<!-- --------------- -->
+					
+					
+					<!-- Controllo che non mi trovo in una pagina coupon, altrimenti nascondo i banner -->
+					<% If Not Request.Url.AbsoluteUri.Contains("coupon") Then%>
+					 
+					 <!-- Pubblicità Posizione Destra Ordinamento 1 -->
+					<asp:SqlDataSource ID="SqlDataSource_Pubblicita_Destra_1" runat="server" ConnectionString="<%$ ConnectionStrings:EntropicConnectionString %>"
+						ProviderName="<%$ ConnectionStrings:EntropicConnectionString.ProviderName %>"
+						SelectCommand="SELECT id, id_Azienda, data_inizio_pubblicazione, data_fine_pubblicazione, limite_click, limite_impressioni, id_posizione_banner, numero_click_attuale, numero_impressioni_attuale, link, img_path, titolo, descrizione, abilitato From pubblicitaV2"
+						UpdateCommand="UPDATE pubblicitaV2 SET numero_impressioni = numero_impressioni + 1 WHERE (id = 1)">
+					</asp:SqlDataSource>
+					<asp:Repeater ID="Repeater6" runat="server" DataSourceID="SqlDataSource_Pubblicita_Destra_1" EnableViewState="False" >
+						<ItemTemplate>
+						<div>
+							<asp:HyperLink ID="hlBanner" runat="server" NavigateUrl='<%# "click.aspx?id=" & Eval("id") & "&link=" & Server.UrlEncode(Eval("link")) %>' EnableViewState="false" tooltip='<%# Eval("Descrizione") %>' ImageUrl='<%# "Public/Banner/" & Eval("img_path") %>' Target='_self'></asp:HyperLink>
+						</div>
+						<br />
+						</ItemTemplate>
+					</asp:Repeater>
+					<!-- Pubblicità Posizione Destra Ordinamento 2 -->
+					<asp:SqlDataSource ID="SqlDataSource_Pubblicita_Destra_2" runat="server" ConnectionString="<%$ ConnectionStrings:EntropicConnectionString %>"
+						ProviderName="<%$ ConnectionStrings:EntropicConnectionString.ProviderName %>"
+						SelectCommand="SELECT id, id_Azienda, data_inizio_pubblicazione, data_fine_pubblicazione, limite_click, limite_impressioni, id_posizione_banner, numero_click_attuale, numero_impressioni_attuale, link, img_path, titolo, descrizione, abilitato From pubblicitaV2"
+						UpdateCommand="UPDATE pubblicitaV2 SET numero_impressioni = numero_impressioni + 1 WHERE (id = 1)">
+					</asp:SqlDataSource>
+					<asp:Repeater ID="Repeater7" runat="server" DataSourceID="SqlDataSource_Pubblicita_Destra_2" EnableViewState="False" >
+					<ItemTemplate>
+						<div>
+							<asp:HyperLink ID="hlBanner" runat="server" NavigateUrl='<%# "click.aspx?id=" & Eval("id") & "&link=" & Server.UrlEncode(Eval("link")) %>' EnableViewState="false" tooltip='<%# Eval("Descrizione") %>' ImageUrl='<%# "Public/Banner/" & Eval("img_path") %>' Target='_self'></asp:HyperLink>
+						</div>
+						<br />
+					</ItemTemplate>
+					</asp:Repeater> 
+					<!-- Pubblicità Posizione Destra Ordinamento 3 -->
+					<asp:SqlDataSource ID="SqlDataSource_Pubblicita_Destra_3" runat="server" ConnectionString="<%$ ConnectionStrings:EntropicConnectionString %>"
+						ProviderName="<%$ ConnectionStrings:EntropicConnectionString.ProviderName %>"
+						SelectCommand="SELECT id, id_Azienda, data_inizio_pubblicazione, data_fine_pubblicazione, limite_click, limite_impressioni, id_posizione_banner, numero_click_attuale, numero_impressioni_attuale, link, img_path, titolo, descrizione, abilitato From pubblicitaV2"
+						UpdateCommand="UPDATE pubblicitaV2 SET numero_impressioni = numero_impressioni + 1 WHERE (id = 1)">
+					</asp:SqlDataSource>
+					<asp:Repeater ID="Repeater8" runat="server" DataSourceID="SqlDataSource_Pubblicita_Destra_3" EnableViewState="False" >
+					<ItemTemplate>
+						<div>
+							<asp:HyperLink ID="hlBanner" runat="server" NavigateUrl='<%# "click.aspx?id=" & Eval("id") & "&link=" & Server.UrlEncode(Eval("link")) %>' EnableViewState="false" tooltip='<%# Eval("Descrizione") %>' ImageUrl='<%# "Public/Banner/" & Eval("img_path") %>' Target='_self'></asp:HyperLink>
+						</div>
+						<br />
+					</ItemTemplate>
+					</asp:Repeater> 
+				
+					<!-- Banner Posizione Destra -->
+					<asp:SqlDataSource ID="sdsBanner" runat="server" ConnectionString="<%$ ConnectionStrings:EntropicConnectionString %>"   ProviderName="<%$ ConnectionStrings:EntropicConnectionString.ProviderName %>"
+						SelectCommand="SELECT * From bannerV2 WHERE (Posizione=3) and (AziendeId = ?AziendeId) and (Coupon=0) ORDER BY Ordinamento, Descrizione" EnableViewState="False">
+						<SelectParameters>
+							<asp:SessionParameter Name="AziendeId" SessionField="AziendaID" Type="Int32" />
+						</SelectParameters>
+					</asp:SqlDataSource>
+
+					<asp:Repeater ID="Repeater1" runat="server" DataSourceID="sdsBanner" EnableViewState="False" >
+					<ItemTemplate>
+					<div>
+						<asp:HyperLink ID="hlBanner" runat="server" NavigateUrl='<%# Eval("Link") %>' EnableViewState="false" tooltip='<%# Eval("Descrizione") %>'  Target='<%# Eval("target") %>'  Visible='<%# chkBanner(Eval("Immagine"))%>' >
+						<asp:Image runat="server" style='width: 100%;' ImageUrl='<%# "public/banner/" & Eval("Immagine") %>'/>
+						</asp:HyperLink><br /><br />
+						<asp:Label ID="htmlLabel" runat="server" Text='<%# Bind("html") %>' Font-Size="5pt"></asp:Label>
+					</div>
+					</ItemTemplate>
+					</asp:Repeater>
+				<%Else%>
+					<!-- Banner Posizione Destra Coupon -->
+					<asp:SqlDataSource ID="sdsBanner_Coupon_Destra" runat="server" ConnectionString="<%$ ConnectionStrings:EntropicConnectionString %>"   ProviderName="<%$ ConnectionStrings:EntropicConnectionString.ProviderName %>"
+						SelectCommand="SELECT * From bannerV2 WHERE (Posizione=3) AND (Coupon=1) ORDER BY Ordinamento, Descrizione" EnableViewState="False">
+					</asp:SqlDataSource>
+
+					<asp:Repeater ID="Repeater_Banner_Coupon_Destra" runat="server" DataSourceID="sdsBanner_Coupon_Destra" EnableViewState="False" >
+					<ItemTemplate>
+						<div>
+							<asp:HyperLink ID="hlBanner" runat="server" NavigateUrl='<%# Eval("Link") %>' EnableViewState="false" tooltip='<%# Eval("Descrizione") %>' ImageUrl='<%# "public/banner/" & Eval("Immagine") %>' Target='<%# Eval("target") %>'  Visible='<%# chkBanner(Eval("Immagine"))%>'></asp:HyperLink><br /><br />
+							<asp:Label ID="htmlLabel" runat="server" Text='<%# Bind("html") %>' Font-Size="5pt"></asp:Label>
+						</div>
+					</ItemTemplate>
+					</asp:Repeater>     
+				
+					<!-- Fine del controllo Uri Coupon, per nascondere o meno le pubblicità -->
+				<%End if %>
+				</div>
+				
+			
+			</div>
+			
+		</div>
+	</div>    
+		
+		<!-- Footer -->
+		<footer>
+			<div class="container">
+				<div class="row pt-3">
+					<div class="col-md-3 d-none d-sm-block">
+						<!-- Logo -->
+						<%If Request.Url.AbsoluteUri.Contains("coupon") Then%>
+							<a href="lista_coupon.aspx"><img src='<%= Session("AziendaLogoFooter") %>' alt="" style="width:95%;" /></a>
+						<%Else%>
+							<a href="<%= "http://" & Session("AziendaUrl") %>"><img src='<%= Session("AziendaLogo") %>' alt="" style="width:95%;" /></a>
+						<%End If%>
+					</div>
+					<div class="col-md-9">
+						<%If Request.Url.AbsoluteUri.Contains("coupon") Then%>
+							<%=Session("AziendaDescrizioneServizioCoupon")%>
+						<%Else%>
+							<%=Session("AziendaDescrizione")%>
+						<%End If%>    
+					</div>
+				</div>
+				<div class="row mt-3">
+					<div class="col-md-3 col-6 mt-3">
+						<asp:Repeater ID="DataList_DIV1" DataSourceID="SqlDataFooterDIV1" runat="server">
+							<ItemTemplate>
+								<a href='<%# iif(Eval("link_esterno")<>"",Eval("link_esterno"),"main.aspx?id=" & Eval("id")) %>' target="<%# Eval("target") %>" title="<%# Eval("descrizione") %>"><%#Eval("nome")%></a><br />
+							</ItemTemplate>
+						</asp:Repeater>
+					</div>
+					<div class="col-md-3 col-6 mt-3">
+						<asp:Repeater ID="DataList_DIV2" DataSourceID="SqlDataFooterDIV2" runat="server">
+							<ItemTemplate>
+								<a href='<%# iif(Eval("link_esterno")<>"",Eval("link_esterno"),"main.aspx?id=" & Eval("id")) %>' target="<%# Eval("target") %>" title="<%# Eval("descrizione") %>"><%#Eval("nome")%></a><br />
+							</ItemTemplate>
+						</asp:Repeater>
+					</div>
+					<div class="col-md-3 col-6 mt-3">
+						<asp:Repeater ID="DataList_DIV3" DataSourceID="SqlDataFooterDIV3" runat="server">
+							<ItemTemplate>
+								<a href='<%# iif(Eval("link_esterno")<>"",Eval("link_esterno"),"main.aspx?id=" & Eval("id")) %>' target="<%# Eval("target") %>" title="<%# Eval("descrizione") %>"><%#Eval("nome")%></a><br />
+							</ItemTemplate>
+						</asp:Repeater>
+					</div>
+					<div class="col-md-3 col-6 mt-3">
+						<asp:Repeater ID="DataList_DIV4" DataSourceID="SqlDataFooterDIV4" runat="server">
+							<ItemTemplate>
+								<a href='<%# iif(Eval("link_esterno")<>"",Eval("link_esterno"),"main.aspx?id=" & Eval("id")) %>' target="<%# Eval("target") %>" title="<%# Eval("descrizione") %>"><%#Eval("nome")%></a><br />
+							</ItemTemplate>
+						</asp:Repeater>
+					</div>
+				</div>
+				<div class="row mt-3" style="background: linear-gradient(to bottom,  #7d7e7d 0%,#0e0e0e 100%); border-radius: 10px;">
+					<div class="col-12 col-md-6 mt-2 mt-md-0" style="align-self: center;">
+						<%=Session("Script_Visite_Azienda")%>
+						<span class="ml-3"><a href="http://www.keepstore.it" target="_blank">Powered by <b>KeepStore</b></a> - Copyright 2017</span>
+					</div>
+					<div class="col-12 col-md-6" style="align-self: center;">
+						<ul id="lista_site_verific">
+							<%If Session("AziendaLogoVerificSite1") <> "" Then%>
+								<li>
+									<a href="<%= Session("LinkAziendaLogoVerificSite1") %>" target="_self"><img src="<%= Session("AziendaLogoVerificSite1") %>" title="<%# Eval("alt") %>" alt="<%# Eval("alt") %>" style="height:50px;" /></a>
+								</li>
+							<%End If%>
+							<%If Session("AziendaLogoVerificSite2") <> "" Then%>
+								<li>
+									<a href="<%= Session("LinkAziendaLogoVerificSite2") %>" target="_self"><img src="<%= Session("AziendaLogoVerificSite2") %>" title="<%# Eval("alt") %>" alt="<%# Eval("alt") %>" style="height:50px;" /></a>
+								</li>
+							<%End If%>
+							<%If Session("AziendaLogoVerificSite3") <> "" Then%>
+								<li>
+									<a href="<%= Session("LinkAziendaLogoVerificSite3") %>" target="_self"><img src="<%= Session("AziendaLogoVerificSite3") %>" title="<%# Eval("alt") %>" alt="<%# Eval("alt") %>" style="height:50px;" /></a>
+								</li>
+							<%End If%>
+							<%If Session("AziendaLogoVerificSite4") <> "" Then%>
+								<li>
+									<a href="<%= Session("LinkAziendaLogoVerificSite4") %>" target="_self"><img src="<%= Session("AziendaLogoVerificSite4") %>" title="<%# Eval("alt") %>" alt="<%# Eval("alt") %>" style="height:50px;" /></a>
+								</li>
+							<%End If%>
+							<!--<li><%=Session("AziendaCopyright")%></li>-->
+						</ul>
+					</div>
+				</div>
+				
+				<div class="row mt-3">
+					<div class="col-md-3 col-6 mt-3">
+						<asp:SqlDataSource ID="Sql_Partners" runat="server" ConnectionString="<%$ ConnectionStrings:EntropicConnectionString %>"
+                            ProviderName="<%$ ConnectionStrings:EntropicConnectionString.ProviderName %>"
+                            SelectCommand="SELECT partners.*, Ordinamento AS Expr1 FROM partners ORDER BY Expr1">
+                        </asp:SqlDataSource>
+						<asp:Repeater ID="List_Partners" runat="server" DataSourceID="Sql_Partners" EnableViewState="False" >					                         
+						 <ItemTemplate>
+						 
+                                <div style="padding-right:10px; text-align:center;overflow:hidden; text-decoration:none; float:left; display:<%# iif(controlla_html(Eval("html"))=0,"block","none") %>;">
+                                <a style="text-decoration:none; border:none;" target="_blank" href='<%# Eval("Link") %>'><img style="border:none; text-decoration:none; " src='\Public\Partners\<%# Eval("Img") %>' alt="" title='<%# Eval("Descrizione") %>' /></a>
+                                </div>
+
+                                <div style="padding-right:10px; text-align:center; height:40px; overflow:hidden; text-decoration:none; float:left; display:<%# iif(controlla_html(Eval("html"))=1,"block","none") %>;">
+                                <%#Eval("html")%>
+                                </div>
+
+                            </ItemTemplate>
+                        </asp:Repeater><br />
+                        </div> 
+                        </div>  
+				
+				<div class="row last text-center mt-2">
+					<div class="col-md-12">
+						<asp:Label ID="lblCredits" runat="server" EnableViewState="False" ></asp:Label> | <asp:HyperLink ID="HyperLink6" runat="server" NavigateUrl="sitemap.aspx" EnableViewState="false">Mappa</asp:HyperLink>
+					</div>
+				</div>
+			</div>
+		</footer>
+        <!--End content-wrap--><!-- Footer -->
+        
+        
+        <!-- Data Source -->
+        <asp:SqlDataSource ID="SqlDataSettori" runat="server" 
+        ConnectionString="<%$ ConnectionStrings:EntropicConnectionString %>" 
+        ProviderName="<%$ ConnectionStrings:EntropicConnectionString.ProviderName %>" 
+        SelectCommand="SELECT * FROM coupon_settori WHERE attiva_disattiva_settore=1 ORDER BY OrdinamentoSettore, Nome"></asp:SqlDataSource>
+        
+        <asp:SqlDataSource ID="SqlDataFooterDIV1" runat="server" 
+        ConnectionString="<%$ ConnectionStrings:EntropicConnectionString %>" 
+        ProviderName="<%$ ConnectionStrings:EntropicConnectionString.ProviderName %>"
+        SelectCommand="SELECT * FROM pagine WHERE (div_position = 0)">
+        </asp:SqlDataSource>
+        
+        <asp:SqlDataSource ID="SqlDataFooterDIV2" runat="server" 
+        ConnectionString="<%$ ConnectionStrings:EntropicConnectionString %>" 
+        ProviderName="<%$ ConnectionStrings:EntropicConnectionString.ProviderName %>"
+        SelectCommand="SELECT * FROM pagine WHERE (div_position = 0)">
+        </asp:SqlDataSource>
+        
+        <asp:SqlDataSource ID="SqlDataFooterDIV3" runat="server" 
+        ConnectionString="<%$ ConnectionStrings:EntropicConnectionString %>" 
+        ProviderName="<%$ ConnectionStrings:EntropicConnectionString.ProviderName %>"
+        SelectCommand="SELECT * FROM pagine WHERE (div_position = 0)">
+        </asp:SqlDataSource>
+        
+        <asp:SqlDataSource ID="SqlDataFooterDIV4" runat="server" 
+        ConnectionString="<%$ ConnectionStrings:EntropicConnectionString %>" 
+        ProviderName="<%$ ConnectionStrings:EntropicConnectionString.ProviderName %>"
+        SelectCommand="SELECT * FROM pagine WHERE (div_position = 0)">
+        </asp:SqlDataSource>
+    <!-- END Wrap -->
+    </form>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+<script runat="server">
+  Function controlla_html(ByVal temp As Object) As Integer
+	  
+	  If IsDBNull(temp) Then
+		  Return 0
+	  Else
+		  If temp.ToString = "" Then
+			  Return 0
+		  End If
+	  End If
+	  
+	  Return 1
+  End Function
+</script>
+
+<%  If (Me.Session.Item("AziendaID") = 1) Then%>
+
+<!-- Entropic -->
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-6991444-1");
+pageTracker._trackPageview();
+} catch(err) {}
+</script>
+
+<% Else%>
+
+<!-- Webaffare -->
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-10867362-1");
+pageTracker._trackPageview();
+} catch(err) {}
+</script>   
+
+<%End If%>
+
+<!-- Best Shopping -->
+<script type="text/javascript" src="https://tracker.bestshopping.com/bestshopping.js"></script>
+
+	
+<script type="text/javascript">
+	//box utente
+	$(function() {
+		var user = $("#lblUtente").text();
+		if(user != ''){
+			$("#userPlaceholder").html(user);
+			$("#user-icon").addClass("loggedin");
+		}
+	});
+	
+	//ricerca mobile
+	$(function() {
+		function submitMobileSearch(){
+			$('#tbCerca').val($('#tbCercaMobile').val())
+			$('#form1').submit()
+		}
+		$('#tbCercaMobile').keypress(function(event){
+			var keycode = (event.keyCode ? event.keyCode : event.which);
+			if(keycode == '13'){
+				submitMobileSearch();
+			}
+		});
+		$('#tbCercaMobileBtn').click(function(){
+			submitMobileSearch();
+		})
+	});
+	$(function () {
+	  $('[data-toggle="tooltip"]').tooltip()
+	})
+	$(function() {
+		$("[data-qty-action='incrementQty']").click(function(){
+			let input = $(this).siblings('input');
+			$(input).val(parseInt($(input).val()) + 1)
+		})
+		
+		$("[data-qty-action='decrementQty']").click(function(){
+			let input = $(this).siblings('input');
+			$(input).val(parseInt($(input).val()) - 1)
+		})
+	});
+	
+	//menu categorie
+	$( '.navbar-hover .dropdown-menu .dropdown-toggle' ).on('click', function() {
+		var $el = $(this);
+		var $parent = $el.offsetParent(".dropdown-menu");
+		
+		if (!$el.next().hasClass("show")) {
+			$el.parents('.dropdown-menu').first().find(".show").removeClass("show");
+		}
+		$el.next(".dropdown-menu").toggleClass("show").parent("li").toggleClass("show");
+		
+		$el.parents("li.nav-item.dropdown.show").on("hidden.bs.dropdown", function () {
+			$(".dropdown-menu .show").removeClass("show");
+		});
+		
+		if (!$parent.parent().hasClass("navbar-nav")) {
+			$el.next().css({"top":$el[0].offsetTop,"left":$parent.outerWidth()});
+		}
+		
+		return false;
+	});
+
+	document.getElementById("tbCerca").addEventListener("keyup", function(event) {
+		event.preventDefault();
+		if (event.keyCode === 13) {
+			document.getElementById("CercaBtn").click();
+		}
+	});
+</script>   
+
+</body>
+</html>
